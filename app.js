@@ -132,16 +132,38 @@ cron.schedule('*/10 * * * * *', () => {
 					// ToDo: Log error
 					return;
 				}
-			
-				const emailTransporter = nodemailer.createTransport({
-					host: process.env[process.env.APP_EMAIL_TRANSPORTER + '_HOST'],
-					port: process.env[process.env.APP_EMAIL_TRANSPORTER + '_PORT'],
-					secure: false, // true for 465, false for other ports
-					auth: {
-						user: process.env[process.env.APP_EMAIL_TRANSPORTER + '_USER'],
-						pass: process.env[process.env.APP_EMAIL_TRANSPORTER + '_PASS']
-					}
-				});
+
+				let emailTransporter = null;
+
+				if ( process.env.APP_EMAIL_TRANSPORTER == 'GMAIL' ) {
+
+					emailTransporter = nodemailer.createTransport({
+						service: 'gmail',
+						host: process.env[process.env.APP_EMAIL_TRANSPORTER + '_HOST'],
+						port: process.env[process.env.APP_EMAIL_TRANSPORTER + '_PORT'],
+						secure: true, // true for 465, false for other ports
+						auth: {
+							type: 'OAuth2',
+							user: process.env[process.env.APP_EMAIL_TRANSPORTER + '_USER'],
+							pass: process.env[process.env.APP_EMAIL_TRANSPORTER + '_PASS'],
+							clientId: process.env[process.env.APP_EMAIL_TRANSPORTER + '_CLIENT_ID'],
+							clientSecret: process.env[process.env.APP_EMAIL_TRANSPORTER + '_CLIENT_SECRET'],
+				            refreshToken: process.env[process.env.APP_EMAIL_TRANSPORTER + '_REFRESH_TOKEN']
+						}
+					});
+
+				} else {
+
+					emailTransporter = nodemailer.createTransport({
+						host: process.env[process.env.APP_EMAIL_TRANSPORTER + '_HOST'],
+						port: process.env[process.env.APP_EMAIL_TRANSPORTER + '_PORT'],
+						secure: false, // true for 465, false for other ports
+						auth: {
+							user: process.env[process.env.APP_EMAIL_TRANSPORTER + '_USER'],
+							pass: process.env[process.env.APP_EMAIL_TRANSPORTER + '_PASS']
+						}
+					});
+				}				
 				
 				emailTransporter.sendMail({
 					from: `"${process.env.APP_NAME}" <${process.env.APP_FROM_EMAIL}>`,
