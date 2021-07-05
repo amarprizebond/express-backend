@@ -19,6 +19,7 @@ const db = require('./dbConnection');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const resultsRouter = require('./routes/results');
+const debugsRouter = require('./routes/debugs');
 const seriesUtility = require('./utility/seriesUtility');
 const numberUtility = require('./utility/numberUtility');
 
@@ -66,6 +67,7 @@ app.use(function (req, res, next) {
 app.use('/api/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/results', resultsRouter);
+app.use('/api/debugs', debugsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -87,7 +89,7 @@ app.use(function(err, req, res, next) {
 /**
  * Email notification
  */ 
-cron.schedule('*/10 * * * * *', () => {
+cron.schedule('*/1 * * * * *', () => {
 
 	const numberUtilityObj = new numberUtility();
 	const sql = 'CALL proc_notification_win();';
@@ -163,7 +165,7 @@ cron.schedule('*/10 * * * * *', () => {
 							pass: process.env[process.env.APP_EMAIL_TRANSPORTER + '_PASS']
 						}
 					});
-				}				
+				}
 				
 				emailTransporter.sendMail({
 					from: `"${process.env.APP_NAME}" <${process.env.APP_FROM_EMAIL}>`,
