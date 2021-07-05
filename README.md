@@ -16,8 +16,8 @@ Configuring the `.env` file
 * Enter either mailtrap or sendinblue config in `.env` file in order mail function to work.
 
 Configuring Database
-* Import the database by running the script [`prizebond.sql`](https://github.com/amarprizebond/express-backend/blob/master/prizebond.sql).
-* Enable enent schedular globally. `SET @@global.event_scheduler = 'ON';`
+* Import the database using the file [`prizebond.sql`](https://github.com/amarprizebond/express-backend/blob/master/prizebond.sql).
+* Enable event schedular globally. `SET @@global.event_scheduler = 'ON';`
 
 Run the project
 * `npm start` to run the project. Open `http://localhost:4000/api` url to Postman or any other your favorite API client.
