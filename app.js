@@ -121,7 +121,7 @@ cron.schedule('*/1 * * * * *', () => {
 			infos.result_date   = moment( infos.result_date ).format('Do MMMM, YYYY');
 			infos.prize_place   = numberUtilityObj.bengaliNumberPosition( infos.prize_place );
 			infos.prize_amount  = numberUtilityObj.bengaliNumber(numeral(infos.prize_amount).format('0,0'));
-			infos.app_url       = process.env.APP_BASE_URL;
+			infos.app_url       = process.env.APP_URL;
 		
 			infos.name = infos.name || infos.email.substring(0, infos.email.lastIndexOf("@"));
 			if ( ! infos.email ) {
