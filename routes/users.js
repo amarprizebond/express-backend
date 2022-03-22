@@ -275,10 +275,10 @@ router.post('/numbers', auth, function(req, res, next) {
 		return next;
 	}
 
-	if ( ! validator.isInt(series.toString(), { min: 1, max: 62 }) || ! validator.isInt(number.toString(), { min: 1, max: 9999999 }) ) {
+	if ( ! validator.isInt(series.toString(), { min: 1 }) || ! validator.isInt(number.toString(), { min: 1, max: 9999999 }) ) {
 		res.status(400).send({
 			error: 'INVALID_INPUT_DATA',
-			message: 'Values are not integer or out of range. Series should be between 1-62. Number should be between 1-9999999.'
+			message: 'Values are not integer or out of range. Series should be greater than 1. Number should be between 1-9999999.'
 		});
 		return next;
 	}
@@ -305,28 +305,50 @@ router.post('/numbers', auth, function(req, res, next) {
 				return next;
 			}
 
-			const data = {
-				user_id: id,
-				series,
-				number
-			};
-			
-			const insertSql = 'INSERT INTO user_numbers SET ?;';
-			db.query(insertSql, [data], (error, results, fields) => {
+			// validation; if series exists
+			const seriesSql = 'SELECT label FROM series WHERE serial = ? LIMIT 1';
+			db.query(seriesSql, [series], (seriesError, seriesResults, fields) => {
 
 				// catch sql error
-				if (error) {
-					res.status(500).send(error);
+				if (seriesError) {
+					res.status(500).send(seriesError);
 					return next;
 				}
 
-				const response = {
-					id: results.insertId,
-					...data
+				if ( seriesResults.length <= 0 ) {
+					res.status(400).send({
+						error: 'INVALID_SERIES',
+						message: 'Series does not exists.'
+					});
+					return next;
 				}
 
-				res.send(response);
-				return next;
+				const label = seriesResults[0].label;
+				const data = {
+					user_id: id,
+					series,
+					number
+				};
+				
+				const insertSql = 'INSERT INTO user_numbers SET ?;';
+				db.query(insertSql, [data], (insertError, insertResults) => {
+	
+					// catch sql error
+					if (insertError) {
+						res.status(500).send(insertError);
+						return next;
+					}
+	
+					const response = {
+						id: insertResults.insertId,
+						label: label,
+						...data
+					}
+	
+					res.send(response);
+					return next;
+				});
+
 			});
 
 		}
