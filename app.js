@@ -17,6 +17,7 @@ const { IncomingWebhook } = require('@slack/webhook');
 
 const db = require('./dbConnection');
 const indexRouter = require('./routes/index');
+const seriesRouter = require('./routes/series');
 const usersRouter = require('./routes/users');
 const resultsRouter = require('./routes/results');
 const debugsRouter = require('./routes/debugs');
@@ -65,6 +66,7 @@ app.use(function (req, res, next) {
 
 // Routes
 app.use('/api/', indexRouter);
+app.use('/api/series', seriesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/results', resultsRouter);
 app.use('/api/debugs', debugsRouter);
@@ -88,6 +90,7 @@ app.use(function(err, req, res, next) {
 
 /**
  * Email notification
+ * Sending emails every second
  */ 
 cron.schedule('*/1 * * * * *', () => {
 
@@ -202,8 +205,9 @@ cron.schedule('*/1 * * * * *', () => {
 
 /**
  * Slack notification
+ * Sending slack notifications every second
  */ 
-cron.schedule('*/10 * * * * *', () => {
+cron.schedule('*/1 * * * * *', () => {
 
 	const sql = 'SELECT * FROM notifications WHERE status = ? AND method = ? ORDER BY time_added LIMIT 10;';
 	db.query(

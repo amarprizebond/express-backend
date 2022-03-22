@@ -182,7 +182,7 @@ router.get('/numbers', auth, function(req, res, next) {
 	}
 	
 	const querySql = search ? 'AND number LIKE '+ db.escape('%' + search + '%') : '';
-	const sql = 'SELECT * FROM user_numbers WHERE user_id = ? '+ querySql +' ORDER BY series, number LIMIT ?, '+ pageSize +';' +
+	const sql = 'SELECT * FROM user_numbers, series WHERE user_numbers.series = series.serial AND user_id = ? '+ querySql +' ORDER BY series, number LIMIT ?, '+ pageSize +';' +
 			    'SELECT COUNT(*) AS count FROM user_numbers WHERE user_id = ? '+ querySql +';' +
 			    'SELECT COUNT(*) AS total FROM user_numbers WHERE user_id = ?;';
 	db.query(
