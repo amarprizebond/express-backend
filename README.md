@@ -1,6 +1,6 @@
 ## Introduction
 
-[amarprizebond/express-backend](https://github.com/amarprizebond/express-backend) is a part of AmarPrizebond project, that provides API. This is a core of the project.
+[amarprizebond/express-backend](https://github.com/amarprizebond/express-backend) is a part of AmarPrizebond project, that provides API. This is the core of the project.
 
 ## Install
 
