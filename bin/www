@@ -6,8 +6,8 @@
 
 var app = require('../app');
 var debug = require('debug')('prizebond-backend:server');
-//var http = require('http');
-var https = require('https');
+var http = require('http');
+//var https = require('https');
 var fs = require('fs');
 
 /**
@@ -21,11 +21,11 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-//var server = http.createServer(app);
-var server = https.createServer({
-  key: fs.readFileSync('/etc/letsencrypt/live/amarprizebond.com/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/amarprizebond.com/cert.pem')
-}, app);
+var server = http.createServer(app);
+//var server = https.createServer({
+//  key: fs.readFileSync('/etc/letsencrypt/live/amarprizebond.com/privkey.pem'),
+//  cert: fs.readFileSync('/etc/letsencrypt/live/amarprizebond.com/cert.pem')
+//}, app);
 
 /**
  * Listen on provided port, on all network interfaces.
